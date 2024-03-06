@@ -17,7 +17,7 @@ jobs:
 
     - name: Testing Dev env variable
       run: |
-        echo "${{ env.TEST }}"
+        echo "${{ vars.TEST }}"
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -67,7 +67,7 @@ jobs:
         databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
 
       env:
-          DATABRICKS_HOST: "https://adb-3620630908047238.18.azuredatabricks.net"
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
           LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
-          REMOTE_FILE_PATH: "/Shared/output/"
+          REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

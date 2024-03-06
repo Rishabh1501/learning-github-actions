@@ -64,6 +64,7 @@ jobs:
 
 
   deploy:
+    needs: build
     environment:
       name: dev
     runs-on: ${{ matrix.os }}

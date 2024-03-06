@@ -15,9 +15,10 @@ jobs:
         python-version: ["3.10"]
     steps:
 
-    - name: Testing Dev env variable
+    - name: Variables Used
       run: |
-        echo "${{ vars.TEST }}"
+        echo Databricks Host: ${{ vars.DATABRICKS_HOST }}
+        echo Remote Save Location: "${{ vars.REMOTE_FILE_PATH }}"
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -33,7 +34,6 @@ jobs:
         name: Build_Artifacts
         path: |
           ${{ github.workspace }}
-          !**/Common/**
           !**/.github/**
           !**/.git/**
           !**/.gitignore/**
@@ -45,24 +45,12 @@ jobs:
         name: Build_Artifacts
         path: "${{github.workspace}}/artifacts"
 
-    # - name: install-databricks-cli
-    #   uses: microsoft/install-databricks-cli@v1.0.0
-
-    # - name: databricks-import-directory
-    #   uses: microsoft/databricks-import-notebook@v1.0.0      
-    #   with:
-    #     databricks-host: "https://adb-3620630908047238.18.azuredatabricks.net"
-    #     databricks-token: ${{ secrets.DB_TOKEN }} 
-    #     local-path: "${{ github.workspace }}/artifacts"
-    #     remote-path: "/Shared/output/"
-
     - name: install-databricks-cli
       run: |
         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
       shell: bash
 
-
-    - name: databricks-import-directory
+    - name: Import Code to Databricks
       run: |
         databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
 

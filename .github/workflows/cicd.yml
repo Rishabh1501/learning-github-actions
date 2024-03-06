@@ -17,7 +17,7 @@ jobs:
 
     - name: Testing Dev env variable
       run: |
-        echo "${{ vars.TEST }}"
+        echo "${{ TEST }}"
 
     - name: Checkout code
       uses: actions/checkout@v3
@@ -64,10 +64,10 @@ jobs:
 
     - name: databricks-import-directory
       run: |
-        databricks workspace import-dir --overwrite "${LOCAL_NOTEBOOKS_PATH}" "${REMOTE_NOTEBOOK_PATH}" --debug
+        databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
 
       env:
           DATABRICKS_HOST: "https://adb-3620630908047238.18.azuredatabricks.net"
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          LOCAL_NOTEBOOKS_PATH: "${{ github.workspace }}/artifacts"
-          REMOTE_NOTEBOOK_PATH: "/Shared/output/"
+          LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
+          REMOTE_FILE_PATH: "/Shared/output/"

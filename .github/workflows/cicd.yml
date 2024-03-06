@@ -17,7 +17,7 @@ jobs:
 
     - name: Testing Dev env variable
       run: |
-        echo "${{ TEST }}"
+        echo "${{ env.TEST }}"
 
     - name: Checkout code
       uses: actions/checkout@v3

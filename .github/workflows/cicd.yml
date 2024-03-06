@@ -6,14 +6,19 @@ on:
 
 jobs:
   build:
+    environment:
+      name: dev
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: ["ubuntu-latest"]
         python-version: ["3.10"]
-    environment:
-      name: dev
     steps:
+
+    - name: Testing Dev env variable
+      run: |
+        echo "${{ vars.TEST }}"
+
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -31,6 +36,7 @@ jobs:
           !**/Common/**
           !**/.github/**
           !**/.git/**
+          !**/.gitignore/**
           !**/README.md
 
     - name: Download Build Artifacts

@@ -17,22 +17,23 @@ jobs:
         echo Databricks Host: ${{ vars.DATABRICKS_HOST }}
         echo Remote Save Location: "${{ vars.REMOTE_FILE_PATH }}"
 
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
     
-    # - name: Installing Databricks CLI
-    #   uses: databricks/setup-cli@main
-    #   with:
-    #     version: '0.215.0'  # Specify the desired version
-    - name: install-databricks-cli
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-      shell: bash
+    - name: Installing Databricks CLI
+      uses: databricks/setup-cli@main
+      with:
+        version: '0.215.0'  # Specify the desired version
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    # - name: install-databricks-cli
+    #   run: |
+    #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+    #   shell: bash
 
     - name: Import Code to Databricks
       run: |

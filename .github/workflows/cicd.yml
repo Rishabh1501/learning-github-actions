@@ -1,4 +1,4 @@
-name: Upload to Databricks using API
+name: Upload Files to Databricks Workspace
 
 on: 
   push:
@@ -24,51 +24,20 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
-
-    - name: Build Artifact
-      uses: actions/upload-artifact@v4.2.0
-      with:
-        name: Build_Artifacts
-        path: |
-          ${{ github.workspace }}
-          !**/.github/**
-          !**/.git/**
-          !**/.gitignore/**
-          !**/README.md
-
-    - name: Download Build Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: Build_Artifacts
-        path: "${{github.workspace}}/artifacts"
-
-    # - name: install-databricks-cli
-    #   run: |
-    #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-    #   shell: bash
-    - name: install-databricks-cli
+    
+    - name: Installing Databricks CLI
       uses: databricks/setup-cli@main
       with:
         version: '0.215.0'  # Specify the desired version
-
-    # - name: Import Code to Databricks
-    #   run: |
-    #     databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
-
-    #   env:
-    #       DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-    #       DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-    #       LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
-    #       REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"
 
     - name: Import Code to Databricks
       run: |
         rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "/tmp/databricks_import/"
 
-        databricks workspace import-dir --overwrite "/tmp/databricks_import" "${REMOTE_FILE_PATH}" --debug
+        databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
 
       env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          # LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
+          LOCAL_FILE_PATH: "/tmp/databricks_import"
           REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

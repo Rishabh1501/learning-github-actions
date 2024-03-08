@@ -8,7 +8,7 @@ jobs:
   build-and-deploy:
     environment:
       name: dev
-    runs-on: ubuntu-22.04.4
+    runs-on: ubuntu-latest
 
     steps: 
     - name: Variables Used

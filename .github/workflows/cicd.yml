@@ -32,8 +32,8 @@ jobs:
 
     - name: temp dir to install cli
       run: |
-        cd "$HOME/bin"
-        mkdir "$HOME/bin/databricks"
+        mkdir -p "$HOME/bin"
+        mkdir -p "$HOME/bin/databricks"
         cd "$HOME/bin/databricks"
 
     - name: Installing Databricks CLI

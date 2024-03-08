@@ -22,11 +22,6 @@ jobs:
       with:
         python-version: "3.10"
     
-    - name: Installing Databricks CLI
-      uses: databricks/setup-cli@main
-      with:
-        version: '0.215.0'  # Specify the desired version
-    
     - name: Checkout code
       uses: actions/checkout@v4
       
@@ -35,8 +30,21 @@ jobs:
     #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
     #   shell: bash
 
+    - name: temp dir to install cli
+      run: |
+        cd "$HOME/bin"
+        mkdir "$HOME/bin/databricks"
+        cd "$HOME/bin/databricks"
+
+    - name: Installing Databricks CLI
+      uses: databricks/setup-cli@main
+      with:
+        version: '0.215.0'  # Specify the desired version
+
     - name: Import Code to Databricks
       run: |
+        cd ${{ github.workspace }}
+
         rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "${LOCAL_FILE_PATH}"
 
         databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug

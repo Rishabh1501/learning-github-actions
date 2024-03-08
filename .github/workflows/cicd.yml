@@ -3,6 +3,7 @@ name: Upload to Databricks using API
 on: 
   push:
     branches: main
+    # branches: fractal-develop
 
 jobs:
   build-and-deploy:
@@ -41,22 +42,34 @@ jobs:
         name: Build_Artifacts
         path: "${{github.workspace}}/artifacts"
 
-    # - name: install-databricks-cli
-    #   run: |
-    #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-    #   shell: bash
-    
     - name: install-databricks-cli
       run: |
-        pip install databricks-cli
+        curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
       shell: bash
+    
+    # - name: install-databricks-cli
+    #   run: |
+    #     pip install --upgrade databricks-cli
+    #   shell: bash
+
+    # - name: Import Code to Databricks
+    #   run: |
+    #     databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
+
+    #   env:
+    #       DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+    #       DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
+    #       LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
+    #       REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"
 
     - name: Import Code to Databricks
       run: |
-        databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
+        rsync -av --exclude=.git --exclude=.github --exclude=README.md "${{ github.workspace }}/" "/tmp/databricks_import/"
+
+        databricks workspace import-dir --overwrite "/tmp/databricks_import" "${REMOTE_FILE_PATH}" --debug
 
       env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
+          # LOCAL_FILE_PATH: "${{ github.workspace }}/artifacts"
           REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

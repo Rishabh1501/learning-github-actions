@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps: 
-    - name: Variables Used
+    - name: Variables Used in Workflow
       run: |
         echo Databricks Host: ${{ vars.DATABRICKS_HOST }}
         echo Remote Save Location: "${{ vars.REMOTE_FILE_PATH }}"

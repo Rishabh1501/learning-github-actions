@@ -32,12 +32,12 @@ jobs:
 
     - name: Import Code to Databricks
       run: |
-        rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "/tmp/databricks_import/"
+        rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "${LOCAL_FILE_PATH}"
 
         databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
 
       env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          LOCAL_FILE_PATH: "/tmp/databricks_import"
+          LOCAL_FILE_PATH: "/tmp/temp_databricks/"
           REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

@@ -46,12 +46,6 @@ jobs:
       run: |
         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
       shell: bash
-    
-    # - name: install-databricks-cli
-    #   run: |
-    #     pip install --upgrade databricks-cli
-    #   shell: bash
-
     # - name: Import Code to Databricks
     #   run: |
     #     databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
@@ -64,7 +58,7 @@ jobs:
 
     - name: Import Code to Databricks
       run: |
-        rsync -av --exclude=.git --exclude=.github --exclude=README.md "${{ github.workspace }}/" "/tmp/databricks_import/"
+        rsync -av --exclude=.git --exclude=.github --exclude=README.md --exclude=.gitignore "${{ github.workspace }}/" "/tmp/databricks_import/"
 
         databricks workspace import-dir --overwrite "/tmp/databricks_import" "${REMOTE_FILE_PATH}" --debug
 

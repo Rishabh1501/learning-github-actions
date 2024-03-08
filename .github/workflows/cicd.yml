@@ -39,5 +39,6 @@ jobs:
       env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          LOCAL_FILE_PATH: "/tmp/temp_databricks/"
+          # LOCAL_FILE_PATH: "/tmp/temp_databricks/"
+          LOCAL_FILE_PATH: "${{ github.workspace }}/final_code/"
           REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

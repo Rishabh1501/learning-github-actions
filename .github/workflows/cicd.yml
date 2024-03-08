@@ -27,24 +27,18 @@ jobs:
     #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
     #   shell: bash
 
-    - name: temp dir to install cli
-      run: |
-        mkdir -p "$HOME/bin"
-        mkdir -p "$HOME/bin/databricks"
-        cd "$HOME/bin/databricks"
-
-    - name: Installing Databricks CLI
-      uses: databricks/setup-cli@main
-      with:
-        version: '0.215.0'  # Specify the desired version
 
     - name: Checkout code
       uses: actions/checkout@v4
   
+    - name: Installing Databricks CLI
+      run: |
+        chmod +x ${{ github.workspace }}/databricks_cli_install.sh
+        ${{ github.workspace }}/databricks_cli_install.sh
+      shell: bash
+
     - name: Import Code to Databricks
       run: |
-        cd ${{ github.workspace }}
-
         rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "${LOCAL_FILE_PATH}"
 
         databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
@@ -52,6 +46,6 @@ jobs:
       env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DB_TOKEN }}
-          # LOCAL_FILE_PATH: "/tmp/temp_databricks/"
-          LOCAL_FILE_PATH: "${{ github.workspace }}/final_code/"
+          LOCAL_FILE_PATH: "/tmp/temp_databricks/"
+          # LOCAL_FILE_PATH: "${{ github.workspace }}/final_code/"
           REMOTE_FILE_PATH: "${{ vars.REMOTE_FILE_PATH }}"

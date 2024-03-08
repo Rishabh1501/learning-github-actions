@@ -42,10 +42,13 @@ jobs:
         name: Build_Artifacts
         path: "${{github.workspace}}/artifacts"
 
+    # - name: install-databricks-cli
+    #   run: |
+    #     curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+    #   shell: bash
     - name: install-databricks-cli
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-      shell: bash
+      uses: databricks/setup-cli@main
+
     # - name: Import Code to Databricks
     #   run: |
     #     databricks workspace import-dir --overwrite "${LOCAL_FILE_PATH}" "${REMOTE_FILE_PATH}" --debug
@@ -58,7 +61,7 @@ jobs:
 
     - name: Import Code to Databricks
       run: |
-        rsync -av --exclude=.git --exclude=.github --exclude=README.md --exclude=.gitignore "${{ github.workspace }}/" "/tmp/databricks_import/"
+        rsync -av --exclude={.git,.github,README.md,.gitignore} "${{ github.workspace }}/" "/tmp/databricks_import/"
 
         databricks workspace import-dir --overwrite "/tmp/databricks_import" "${REMOTE_FILE_PATH}" --debug
 

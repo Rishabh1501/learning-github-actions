@@ -31,6 +31,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
   
+    - name: Azure CLI script
+      uses: azure/cli@v2
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          az --version
+
     - name: Installing Databricks CLI
       run: |
         chmod +x ${{ github.workspace }}/databricks_cli_install.sh
